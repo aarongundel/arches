@@ -11,7 +11,8 @@ from django.core.files import File
 from django.http import HttpResponse
 from openpyxl import load_workbook
 from django.db import connection
-from django.db.utils import IntegrityError, ProgrammingError
+from django.core.files.storage import FileSystemStorage
+from django.db.utils import IntegrityError
 from django.utils.translation import ugettext as _
 from django.core.files.storage import default_storage
 from arches.app.datatypes.datatypes import DataTypeFactory
@@ -274,6 +275,13 @@ class BranchCsvImporter:
                             result["summary"]["files"][file.filename] = {"size": (self.filesize_format(file.file_size))}
                             result["summary"]["cumulative_excel_files_size"] = self.cumulative_excel_files_size
                         default_storage.save(os.path.join(self.temp_dir, file.filename), File(zip_ref.open(file)))
+                        zip_ref.extract(file, self.temp_dir)
+        elif content.content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" or content.content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": 
+            #result["summary"]["files"][content.name] = {"size": ()}
+            result["summary"]["cumulative_excel_files_size"] = self.filesize_format(content.size)
+            fs = FileSystemStorage(location = self.temp_dir)
+            fs.save(content.name, content)
+
         return {"success": result, "data": result}
 
     def start(self, request):
