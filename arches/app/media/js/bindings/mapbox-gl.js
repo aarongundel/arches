@@ -42,7 +42,7 @@ define([
             });
             //-- #46072: add scale control to map
             map.addControl(new mapboxgl.ScaleControl({
-                maxWidth: 80,
+                maxWidth: 200,
                 unit: 'metric'
             }));
             //----------------
