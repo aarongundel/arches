@@ -601,7 +601,7 @@ MAPBOX_GLYPHS = "mapbox://fonts/mapbox/{fontstack}/{range}.pbf"
 DEFAULT_MAP_ZOOM = 0
 MAP_MIN_ZOOM = 0
 MAP_MAX_ZOOM = 20
-MAP_SEARCH_AUTO_ZOOM = True
+MAP_SEARCH_AUTO_ZOOM = False #True enable automatically fit search results bounds , False = disable
 
 # If True, users can make edits to graphs that are locked
 # (generally because they have resource intances saved against them)
