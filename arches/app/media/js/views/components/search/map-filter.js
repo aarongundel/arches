@@ -21,7 +21,7 @@ define([
 
                 this.dependenciesLoaded = ko.observable(false)
                 this.resultsAutoZoomEnabled = arches.mapSearchAutoZoom;
-                this.mapFitBound = function(bounds, options, force){
+                this.mapFitBounds = function(bounds, options, force){
                     if(this.resultsAutoZoomEnabled || force){
                         this.map().fitBounds(bounds, options);
                     }
@@ -148,7 +148,7 @@ define([
                         if(geoJSON.features.length > 0){
                             var extent = geojsonExtent(geoJSON);
                             var bounds = new this.mapboxgl.LngLatBounds(extent);
-                            this.mapFitBound(bounds, {
+                            this.mapFitBounds(bounds, {
                                 padding: parseInt(this.buffer(), 10)
                             });
                         }
@@ -299,7 +299,7 @@ define([
                         var geojsonFC = self.filter.feature_collection();
                         var extent = geojsonExtent(geojsonFC);
                         var bounds = new this.mapboxgl.LngLatBounds(extent);
-                        self.mapFitBound(bounds, {
+                        self.mapFitBounds(bounds, {
                             padding: self.buffer()
                         });
                     } else {
@@ -504,7 +504,7 @@ define([
                 });
                 var bounds = new this.mapboxgl.LngLatBounds(geojsonExtent(mapData.geom));
                 var maxZoom = ko.unwrap(this.maxZoom);
-                this.mapFitBound(bounds, {
+                this.mapFitBounds(bounds, {
                     maxZoom: maxZoom > 17 ? 17 : maxZoom
                 },true);
             },
@@ -602,7 +602,7 @@ define([
                     ];
                     var maxZoom = ko.unwrap(this.maxZoom);
                     maxZoom = maxZoom > 17 ? 17 : maxZoom;
-                    this.mapFitBound(bounds, {
+                    this.mapFitBounds(bounds, {
                         padding: 45,
                         maxZoom: maxZoom
                     });
