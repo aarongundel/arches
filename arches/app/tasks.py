@@ -84,11 +84,14 @@ def export_search_results(self, userid, request_values, format, report_link):
 
     search_history_obj = models.SearchExportHistory.objects.get(pk=exportid)
 
+    expiration_date = datetime.now() + timedelta(seconds=settings.CELERY_SEARCH_EXPORT_EXPIRES)
+    formatted_expiration_date = expiration_date.strftime("%A, %d %B %Y")
+
     return {
         "taskid": self.request.id,
         "msg": _(
-            "Your search {} is ready for download. You have 24 hours to access this file, after which we'll automatically remove it."
-        ).format(export_name),
+            f"Your search '{export_name}' is ready for download. You have until {formatted_expiration_date} to access this file, after which we'll automatically remove it."
+        ),
         "notiftype_name": "Search Export Download Ready",
         "context": dict(
             greeting=_("Hello,\nYour request to download a set of search results is now ready."),
