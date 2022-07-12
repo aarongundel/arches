@@ -605,7 +605,7 @@ define([
                     this.mapFitBounds(bounds, {
                         padding: 45,
                         maxZoom: maxZoom
-                    });
+                    }, !this.pageLoaded);
                 }
             }
         }),
