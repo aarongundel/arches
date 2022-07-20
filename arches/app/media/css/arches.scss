@@ -8676,7 +8676,6 @@ a.mega-dropdown-toggle.disabled {
 .rr-table-row-initial {
     display: flex;
     flex-direction: row;
-    height: 36px;
 }
 
 .rr-table-row-panel {
@@ -8732,10 +8731,7 @@ a.mega-dropdown-toggle.disabled {
 }
 
 .rr-table-instance-label {
-    width: 430px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    padding: 0 10px 10px 10px;
 }
 
 .create-resource-instance-card-component {
@@ -8865,10 +8861,6 @@ a.mega-dropdown-toggle.disabled {
 .create-resource-instance-card-component.rr-table-pop .create-instance-panel {
     background: #fff;
     min-height: 60%;
-}
-
-.new-provisional-edit-card-container .rr-table-instance-label {
-    width: 475px;
 }
 
 .workbench-card-sidepanel .rr-table-instance-label {
@@ -13092,7 +13084,7 @@ ul.select2-choices:after {
 }
 
 .card-component-wrapper-editor {
-    height: 100%;
+    height: calc(100vh - 100px);
     padding-bottom: 50px;
     overflow-y: auto;
     background: #fafafa;
