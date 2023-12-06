@@ -46,7 +46,9 @@ jobs:
           echo "Making Directory"
           mkdir dist/arches
           echo "Untarring"
+          ls -la dist/
           tar -xzf dist/arches*.tar.gz -C dist/arches --strip-components=1
+          echo "Counting diff"
           count=$(diff -qr ./arches/ ./dist/arches/arches | grep -c '^Only in ./arches:.*\.py$')
           if [ $count -gt 10 ]; then
               echo "Error: There are too many missing python files in the distribution."
