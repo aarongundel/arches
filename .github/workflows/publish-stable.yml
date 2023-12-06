@@ -41,8 +41,11 @@ jobs:
           find arches/app/media/build -type f -not -name '.gitignore' -delete
           python -m pip install --upgrade pip
           pip install wheel
+          echo "Running setup.py"
           python setup.py sdist bdist_wheel
+          echo "Making Directory"
           mkdir dist/arches
+          echo "Untarring"
           tar -xzf dist/arches*.tar.gz -C dist/arches --strip-components=1
           count=$(diff -qr ./arches/ ./dist/arches/arches | grep -c '^Only in ./arches:.*\.py$')
           if [ $count -gt 10 ]; then
