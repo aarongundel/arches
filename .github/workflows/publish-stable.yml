@@ -47,7 +47,8 @@ jobs:
           mkdir dist/arches
           echo "Untarring"
           tar -xzf dist/arches*.tar.gz -C dist/arches --strip-components=1
-          ls -la dist/arches
+          ls -la ./arches/
+          ls -la ./dist/arches/arches
           echo "Counting diff"
           count=$(diff -qr ./arches/ ./dist/arches/arches | grep -c '^Only in ./arches:.*\.py$')
           echo $count
