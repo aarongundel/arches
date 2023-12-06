@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "test/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:13-3.0
+        env:
+          POSTGRES_PASSWORD: postgis
+          POSTGRES_DB: arches
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.11
+
+      - name: Install Java, GDAL, and other system dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install libxml2-dev libpq-dev openjdk-8-jdk libgdal-dev
+          echo Postgres and ES dependencies installed
+
+      - uses: ankane/setup-elasticsearch@v1
+        with:
+          elasticsearch-version: 8
+
+      - name: Clean up and do a fresh build
+        run: |
+          rm -rf arches/arches.egg-info arches/build arches/dist arches/arches/app/media/node_modules staticfiles/CACHE/css
+          find arches/app/media/build -type f -not -name '.gitignore' -delete
+          python -m pip install --upgrade pip
+          pip install wheel
+          python setup.py sdist bdist_wheel
+          mkdir dist/arches
+          tar -xzf dist/arches*.tar.gz -C dist/arches --strip-components=1
+          count=$(diff -qr ./arches/ ./dist/arches/arches | grep -c '^Only in ./arches:.*\.py$')
+          if [ $count -gt 10 ]; then
+              echo "Error: There are too many missing python files in the distribution."
+              exit 1
+          fi
+          rm -rf dist/arches
+          python3.11 -m venv ../ENV
+          source ../ENV/bin/activate
+          python -m pip install dist/arches-*.tar.gz
+          cd ../ && arches-project create myproject
+          cd myproject
+          python manage.py setupdb -force
+          python -m pip install twine
+          twine upload dist/ -u ${{ secrets.TWINE_USER }} -p ${{ secrets.TWINE_PASS }}
+
+      - name: adds release notes
+        run: gh release create v$VERSION -n "Please see the release notes for [details](https://github.com/archesproject/arches/blob/stable/$VERSION/releases/$VERSION.md)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.html_url }}
