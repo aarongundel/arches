@@ -52,7 +52,7 @@ jobs:
           echo "Counting diff"
           (diff -qr ./arches/ ./dist/arches/arches 2>/dev/null; exit 0)
           count=$((diff -qr ./arches/ ./dist/arches/arches 2>/dev/null; exit 0) | (grep -c '^Only in ./arches:.*\.py$'; exit 0))
-          echo $count
+          echo "Finished diff"
           if [ $count -gt 10 ]; then
               echo "Error: There are too many missing python files in the distribution."
               exit 1
