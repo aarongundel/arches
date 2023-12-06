@@ -46,14 +46,16 @@ jobs:
           echo "Making Directory"
           mkdir dist/arches
           echo "Untarring"
-          ls -la dist/
           tar -xzf dist/arches*.tar.gz -C dist/arches --strip-components=1
+          ls -la dist/arches
           echo "Counting diff"
           count=$(diff -qr ./arches/ ./dist/arches/arches | grep -c '^Only in ./arches:.*\.py$')
+          echo $count
           if [ $count -gt 10 ]; then
               echo "Error: There are too many missing python files in the distribution."
               exit 1
           fi
+          echo "removing distribution"
           rm -rf dist/arches
           python3.11 -m venv ../ENV
           source ../ENV/bin/activate
